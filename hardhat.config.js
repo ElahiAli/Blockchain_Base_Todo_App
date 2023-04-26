@@ -4,6 +4,10 @@ require("hardhat-deploy");
 require("solidity-coverage");
 require("dotenv").config();
 
+const ETHESCAN_API_KEY = process.env.ETHESCAN_API_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xkey";
+const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL;
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
@@ -15,7 +19,13 @@ module.exports = {
     },
     localhost: {
       chainId: 31337,
-      url: "",
+      url: "http://127.0.0.1:8545/",
+    },
+    sepolia: {
+      url: SEPOLIA_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 11155111,
+      blockConfirmations: 6,
     },
   },
   namedAccounts: {
@@ -26,5 +36,8 @@ module.exports = {
     client: {
       default: 1,
     },
+  },
+  etherscan: {
+    apiKey: ETHESCAN_API_KEY,
   },
 };
