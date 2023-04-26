@@ -13,7 +13,6 @@ contract Todo {
     string fullname;
     address id;
   }
-  // Users[] private users;
 
   enum Status {
     ToDo,
@@ -28,8 +27,8 @@ contract Todo {
     uint256 id;
   }
 
-  mapping(string => address) userToId;
   mapping(uint256 => Task) idToTask;
+  mapping(address => bool) addressToPayStatus;
 
   event Payed(string fullName);
   event TaskCreated(uint256 id, string title);
@@ -48,18 +47,16 @@ contract Todo {
 
   function initialPayment(string memory _fullName) public payable {
     require(msg.value >= MINIMUM_USD, "Not enough ETH.");
-    // users.push(Users(_fullName, msg.sender));
-    userToId[_fullName] = msg.sender;
+    addressToPayStatus[msg.sender] = true;
     emit Payed(_fullName);
   }
 
   function createTask(
-    string memory _fullName,
     string memory _title,
     string memory _description,
     Status _status
   ) public owner {
-    if (userToId[_fullName] != msg.sender) {
+    if (addressToPayStatus[msg.sender] != true) {
       revert Todo__InitialPaymentNeeded();
     }
     taskId++;
@@ -90,9 +87,11 @@ contract Todo {
     return i_Owner;
   }
 
-  function getUserAddress(
-    string memory _fullName
-  ) public view returns (address) {
-    return userToId[_fullName];
+  function getUserPaymentStatus() public view returns (bool) {
+    return addressToPayStatus[msg.sender];
+  }
+
+  function getTaskCount() public view returns (uint256) {
+    return taskId;
   }
 }
