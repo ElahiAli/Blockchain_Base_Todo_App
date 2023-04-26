@@ -13,7 +13,7 @@ contract Todo {
     string fullname;
     address id;
   }
-  Users[] private users;
+  // Users[] private users;
 
   enum Status {
     ToDo,
@@ -48,7 +48,7 @@ contract Todo {
 
   function initialPayment(string memory _fullName) public payable {
     require(msg.value >= MINIMUM_USD, "Not enough ETH.");
-    users.push(Users(_fullName, msg.sender));
+    // users.push(Users(_fullName, msg.sender));
     userToId[_fullName] = msg.sender;
     emit Payed(_fullName);
   }
@@ -84,5 +84,15 @@ contract Todo {
       tasks[index - 1] = idToTask[index];
     }
     return tasks;
+  }
+
+  function getOwner() public view returns (address) {
+    return i_Owner;
+  }
+
+  function getUserAddress(
+    string memory _fullName
+  ) public view returns (address) {
+    return userToId[_fullName];
   }
 }
