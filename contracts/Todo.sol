@@ -79,7 +79,7 @@ contract Todo {
   }
 
   function getAllTasks() public view owner returns (Task[] memory) {
-    Task[] memory tasks;
+    Task[] memory tasks = new Task[](taskId);
     for (uint256 index = 1; index <= taskId; index++) {
       tasks[index - 1] = idToTask[index];
     }
